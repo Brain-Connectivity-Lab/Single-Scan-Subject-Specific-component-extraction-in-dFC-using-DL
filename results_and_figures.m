@@ -284,7 +284,7 @@ title([atlas_full_name ', NKI Subject-Specific, COBE dictionaries trained using 
 grid on
 
 %% acco
-  results_path = ['C:\Users\krish\Box\Single Subject COBE\new_data_results\nki_hcp\from_hcp_dict\new_acco\' atlas_name];
+results_path = fullfile(working_dir,'from_hcp_dict_nki',atlas_name);
 figure;
 clear net_acco_test  net_acco_test_cobe
 for i_net = net_select_perm 
