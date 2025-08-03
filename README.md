@@ -6,8 +6,11 @@ First, download all the codes and files in this repo.
 
 ## To just view the figures provided in the manuscript
 run the results_and_figures.m file.
+
   i) Before running change the working directory path. Put the path of the dir where the repo was downloaded.
-  ii) Just by running thr results_and_figures.m file now you should be able to genrate the figures corresponding to the Schefer_HCP_419 roi atlas.
+  
+  ii) Just by running the results_and_figures.m file, now you should be able to generate the figures corresponding to the Schefer_HCP_419 roi atlas.
+  
 
 ## To recreate everything, you will have to do the following
 1) Download the HCP data and run divide_in_3_and_get_reg_ts_files.m
