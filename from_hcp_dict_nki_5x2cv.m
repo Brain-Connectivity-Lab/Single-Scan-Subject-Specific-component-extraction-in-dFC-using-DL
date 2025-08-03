@@ -1,4 +1,10 @@
 %% SIngle Subject COBE HCP + NKI use old dictionaries
+
+% This script was written by Pratik Jain if you have any questions email
+% jainpratik412@gmail.com
+% 
+% This Script uses the dictionaries trained using the HCP dataset to test on the NKI dataset.
+
 clear
 working_dir = 'H:\Single_scan_cobe_results2';
 file_path_nki = fullfile(working_dir,'NKI_matfiles'); %NKI average timeseries path
