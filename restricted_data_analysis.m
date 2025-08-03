@@ -40,8 +40,8 @@ end
 clear data
 
 %% Restricted csv
-
-csv = readtable('C:\Users\krish\Box\Single Subject COBE\RESTRICTED_pratikpj44_3_21_2025_15_43_25_new.csv');
+res_data_csv_path = 'path to the restricted data csv';
+csv = readtable(res_data_csv_path);
 
 [~, ia] = unique(csv.Family_ID);
 % 
@@ -142,7 +142,7 @@ col = [0 1 1
     1 0 0];
 
 
-for i_net =7%9:-1:1
+for i_net =9:-1:1
     % during train and test for comparision
     clear cobe_dict
     for iter = 1:5  % 5 iterations

@@ -93,7 +93,7 @@ col = [0 1 1
     1 0 0];
 
 
-for i_net = 7%9:-1:1
+for i_net = 9:-1:1
     % during train and test for comparision
     clear cobe_dict
     for iter = 1:5  % 5 iterations

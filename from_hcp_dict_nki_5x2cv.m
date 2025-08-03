@@ -42,7 +42,7 @@ data_nki_1 = data_nki_1(:,:,ia);
 data_nki_2 = data_nki_2(:,:,ib);
 
 hcp_perm_matfiles_path = ['E:\dy_identification_cobe\new_data_results\perm_check\' atlas_name];
-for i_net = 7%9:-1:1
+for i_net = 9:-1:1
     load(fullfile(hcp_perm_matfiles_path,[net_names{i_net},'_max_acco1_' atlas_name ,'_test5x2.mat']),'cobe_dict')
 
 
@@ -154,7 +154,7 @@ for i_net = 7%9:-1:1
 
         disp('#################################################################################################')
 
-        save(fullfile(results_path,[char(net_names(i_net)),'_nki_' atlas_name '_test_from_hcp_perm_dict_new_acco_5x2.mat']),"Idiff_max_test_perm_nki",...  _cobe_perm_acco_idiff_weight_',num2str(w_idiff*100),'_max2.mat
+        save(fullfile(results_path,[char(net_names(i_net)),'_nki_' atlas_name '_test_from_hcp_perm_dict_5x2.mat']),"Idiff_max_test_perm_nki",...  _cobe_perm_acco_idiff_weight_',num2str(w_idiff*100),'_max2.mat
             "Idiff_max_test_cobe_perm_nki",'acco_or_test_perm_nki','acco_test_perm_nki',"cobe_dict",'win_nki','st_nki','-v7.3')
         end
     end

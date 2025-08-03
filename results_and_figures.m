@@ -288,7 +288,7 @@ results_path = fullfile(working_dir,'from_hcp_dict_nki',atlas_name);
 figure;
 clear net_acco_test  net_acco_test_cobe
 for i_net = net_select_perm 
-    load(fullfile(results_path,[char(net_names(i_net)),'_nki_' atlas_name '_test_from_hcp_perm_dict_new_acco_5x2.mat']),'acco_or_test_perm_nki','acco_test_perm_nki')
+    load(fullfile(results_path,[char(net_names(i_net)),'_nki_' atlas_name '_test_from_hcp_perm_dict_5x2.mat']),'acco_or_test_perm_nki','acco_test_perm_nki')
 %     net_acco_test_s(:,i_net) = acco_or_test_perm_s(:)*100;
     net_acco_test(:,i_net) = acco_or_test_perm_nki(:)*100;
 
