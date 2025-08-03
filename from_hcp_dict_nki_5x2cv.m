@@ -30,13 +30,13 @@ st_nki = 7;
 
 configs.numSubj = 41;%(2*n_train_hcp - n_train_hcp) + (n_nki - n_train_nki);
 
-%% NKI 94 subjects
+%% NKI 82 subjects
 
-data_1 = load([file_path_nki,'session_1_reg_ts_' atlas_name '_rest'],'reg_ts','p_sub_name'); % load the FLU1 subjects
+data_1 = load([file_path_nki,filesep,'session_1_reg_ts_' atlas_name '_rest'],'reg_ts','p_sub_name'); % load the FLU1 subjects
 sub_namedata1 = data_1.p_sub_name;                                              % FLU1 subject names
 data_nki_1 = data_1.reg_ts;                                                    % FLU1 average region time series
 
-data_2 = load([file_path_nki,'session_2_reg_ts_' atlas_name '_rest'],'reg_ts','p_sub_name');             % load the BAS1 subjects
+data_2 = load([file_path_nki,filesep,'session_2_reg_ts_' atlas_name '_rest'],'reg_ts','p_sub_name');             % load the BAS1 subjects
 sub_namedata2 = data_2.p_sub_name;                                              % BAS1 subject names
 data_nki_2 = data_2.reg_ts;                                                    % BAS1 average region time series
 
@@ -47,8 +47,8 @@ sub_info_rest = cell(10,1);                                                     
 data_nki_1 = data_nki_1(:,:,ia);
 data_nki_2 = data_nki_2(:,:,ib);
 
-hcp_perm_matfiles_path = ['E:\dy_identification_cobe\new_data_results\perm_check\' atlas_name];
-for i_net = 9:-1:1
+hcp_perm_matfiles_path = fullfile(working_dir,'matfiles');
+for i_net = 7%9:-1:1
     load(fullfile(hcp_perm_matfiles_path,[net_names{i_net},'_max_acco1_' atlas_name ,'_test5x2.mat']),'cobe_dict')
 
 
