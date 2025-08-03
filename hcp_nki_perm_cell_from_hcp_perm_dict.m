@@ -1,22 +1,22 @@
 %% SIngle Subject COBE HCP + NKI use old dictionaries
-% clear
-% rng(5,"twister");
+clear
+working_dir = 'H:\Single_scan_cobe_results2';
+file_path_nki = 'D:\DATA\Mat_files\NKI\'; %NKI average timeseries path
+
+addpath(fullfile(working_dir,'codes_functions','Dynamic_fingerprints-main')) % load amico dfc idiff codes
+addpath(fullfile(working_dir,'codes_functions','functions'))
+addpath(fullfile(working_dir,'codes_functions','functions','COBE'))
 %% Load the matfiles
-addpath('E:\dy_identification_cobe\Dynamic_fingerprints-main') % load amico dfc idiff codes
-addpath('D:\codes\Individual_differences_code_HBM_paper\Codes\functions')
-addpath('C:\Users\krish\Box\Single Subject COBE\paper_figure_codes_final\functions\COBE')
+
 net_names = {'Non Yeo','Visual','Somato Motor','Dorsal Attention','Ventral Attention','Limbic Network','Fronto-Parietal','Default Mode','Whole Brain'}; % names of the networks
 
-matfile_path = 'E:\dy_identification_cobe\matfiles';%'E:\hcp_100_unrelated_matfiles\removed_nan_subject_from_all';                         % location of the matfiles containg the region timeseries extracted from atlas
+matfile_path = fullfile(working_dir,'matfiles'); 
 atlas_name = 's400_hcp';
-para_check_path = 'E:\dy_identification_cobe\new_data_results\para_check';
-results_path = ['C:\Users\krish\Box\Single Subject COBE\new_data_results\nki_hcp\from_hcp_dict\new_acco\' atlas_name];
+para_check_path = fullfile(working_dir,'para_check');
+results_path = fullfile(working_dir,'from_hcp_dict_nki',atlas_name);
 mkdir(results_path)
-file_path_nki = 'D:\DATA\Mat_files\NKI\';
 
-% Win_size = [50,100,200,400,800];
-% Com_comp = 1:2:20;
-% Stride = [20,50,100];
+
 win_hcp = 400;
 win_nki = 288;
 
@@ -42,8 +42,8 @@ sub_info_rest = cell(10,1);                                                     
 data_nki_1 = data_nki_1(:,:,ia);
 data_nki_2 = data_nki_2(:,:,ib);
 
-hcp_perm_matfiles_path = ['C:\Users\krish\Box\Single Subject COBE\new_data_results\perm_check\' atlas_name];
-for i_net = 7%[5,6,8,9]
+hcp_perm_matfiles_path = fullfile(working_dir,'5x2cv',atlas_name);
+for i_net = 7%9:-1:1
     load(fullfile(hcp_perm_matfiles_path,[net_names{i_net},'_max_acco1_' atlas_name ,'_test.mat']),'cobe_dict')
 
 
@@ -60,8 +60,10 @@ for i_net = 7%[5,6,8,9]
     % 7 --> node belongs to Default Mode network
     % 0 --> node does not belongs to any of the 7 yeo network
 
-    atlas_brain_path = ['D:\Atlases\2mm_new\' atlas_name '.nii'];                      % Path of brain atlas used to get the Averaged time series
-    atlas_yeo_path = 'D:\Atlases\2mm_new\yeo_7_net.nii';
+    atlas_path = fullfile(working_dir,'atlases');
+    atlas_brain_path = fullfile(atlas_path,[atlas_name,'.nii']);
+
+    atlas_yeo_path = fullfile(atlas_path,'yeo_7_net.nii');
     idx = yeo_networks(atlas_brain_path,atlas_yeo_path);                       % Identify the networks indexes for each ROI
     [sort_idx_val,sort_idx] = sort(idx);
     % net_names = {'Non Yeo','Visual','Somato Motor','Dorsal Attention','Ventral Attention','Limbic Network','Fronto-Parietal','Default Mode','Whole Brain'}; % names of the networks
