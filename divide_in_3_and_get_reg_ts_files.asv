@@ -24,8 +24,8 @@ all_sub_files_LR = dir(fullfile(data_folder,'*',['MNINonLinear\Results\rfMRI_RES
 encode= 'RL';
 all_sub_files_RL = dir(fullfile(data_folder,'*',['MNINonLinear\Results\rfMRI_REST' run '_' encode],'rfMRI*_hp2000_clean.nii.gz'));
 
-LR_names = {all_sub_files_LR.folder}; LR_names = cellfun(@(x) strsplit(x,filesep) ,LR_names,'UniformOutput',false); LR_names = cellfun(@(x) x{3} ,LR_names,'UniformOutput',false); 
-RL_names = {all_sub_files_RL.folder}; RL_names = cellfun(@(x) strsplit(x,filesep) ,RL_names,'UniformOutput',false); RL_names = cellfun(@(x) x{3} ,RL_names,'UniformOutput',false); 
+LR_names = {all_sub_files_LR.folder}; LR_names = cellfun(@(x) strsplit(x,filesep) ,LR_names,'UniformOutput',false);
+RL_names = struct2cell(all_sub_files_RL); RL_names(2:end,:) = []; RL_names = cellfun(@(x) x(1:6),RL_names,'UniformOutput',false);
 
 [~,ai,bi] = intersect(string(LR_names),string(RL_names));
 
