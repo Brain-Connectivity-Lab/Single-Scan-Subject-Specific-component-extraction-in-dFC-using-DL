@@ -1,8 +1,8 @@
 # Single-Scan-Subject-Specific-component-extraction-in-dFC-using-DL
 Code for the paper Single Scan, Subject-Specific component extraction in dynamic functional connectivity using Dictionary Learning. 
 
-## Description
-First download all the codes and files in this repo and 
+## How to run?
+First, download all the codes and files in this repo.
 
 ## To just view the figures provided in the manuscript
 run the results_and_figures.m file.
