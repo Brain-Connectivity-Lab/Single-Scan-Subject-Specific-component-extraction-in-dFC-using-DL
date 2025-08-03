@@ -14,8 +14,14 @@ run the results_and_figures.m file.
 
 ## To recreate everything, you will have to do the following
 1) Download the HCP data and run divide_in_3_and_get_reg_ts_files.m
+   
      i) Downlooad HCP data with ICA fix from connectome db (1200 Subject Data release).
-     ii) Open the divide_in_3_and_get_reg_ts_files.m file and 
+
+     ii) Open the divide_in_3_and_get_reg_ts_files.m file and
+   
      iii) put the path of the folder corresponding to the downloaded files in data_folder
+   
      iv) Give a path to an empty working directory folder.
+   
      v) This will create the average timeseries for every subject for the atlas choosen, randomly divide the subjects in 3 groups and save the .mat files in the working directory
+   
