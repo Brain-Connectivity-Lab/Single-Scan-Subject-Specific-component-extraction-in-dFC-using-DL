@@ -1,4 +1,5 @@
 %% Twin and family data
+% This Script uses the optimal parameters from the script Create_avg_para_search_values_across_blocks.m and performs 5x2 CV on the monozygotic, dizygotic and unrelated subjects
 clear
 working_dir = 'H:\Single_scan_cobe_results2';
 
