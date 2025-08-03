@@ -20,9 +20,9 @@ sub_block = '1';
 configs.numTP = 1200; % Number of time points
 configs.TR = 720; % HCP TR
 configs.parc = 'Schaefer + Subcortical regions'; % Schaefer + Subcortical regions  Seitzman 300
-configs.numSubj = 179; % Number of sampled subjects
+configs.numSubj = 50; % Number of sampled subjects
 
-train_sub = 179;
+train_sub = 50; % Increase the subjects if you have more RAM memory in the computer
 Win_size = [50,100,200,400,800];
 Com_comp = 1:2:20;
 Stride = [20,50,100];

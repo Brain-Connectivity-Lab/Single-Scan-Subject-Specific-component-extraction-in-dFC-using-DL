@@ -1,0 +1,198 @@
+%% Parameter Search
+% This script was written by Pratik Jain if you have any questions email
+% jainpratik412@gmail.com
+
+% this script uses the average timeseries created from the previous script
+% divide_in_3_and_get_reg_ts_files.m, and performs a grid search to find
+% the best parameters for the specified sub_block, atlas.
+%% Load the matfiles
+working_dir = 'H:\Single_scan_cobe_results2';
+addpath(fullfile(working_dir,'codes_functions','Dynamic_fingerprints-main')) % load amico dfc idiff codes
+addpath(fullfile(working_dir,'codes_functions','functions'))
+addpath(fullfile(working_dir,'codes_functions','functions','COBE'))
+
+matfile_path = fullfile(working_dir,'matfiles'); 
+
+results_path = fullfile(working_dir,'para_check');% 'E:\dy_identification_cobe\new_data_results\para_check';
+mkdir(results_path)
+atlas_name = 's400_hcp';
+sub_block = '1';
+configs.numTP = 1200; % Number of time points
+configs.TR = 720; % HCP TR
+configs.parc = 'Schaefer + Subcortical regions'; % Schaefer + Subcortical regions  Seitzman 300
+configs.numSubj = 50; % Number of sampled subjects
+
+train_sub = 50; % Increase the subjects
+Win_size = [50,100,200,400,800];
+Com_comp = 1:2:20;
+Stride = [20,50,100];
+%% Get yeo network nodes
+% 1 --> node belongs to Visual network
+% 2 --> node belongs to Somatomotor network
+% 3 --> node belongs to Dorsal Attention network
+% 4 --> node belongs to Ventral Attention network
+% 5 --> node belongs to Limbic network
+% 6 --> node belongs to Fronto-Parietal network
+% 7 --> node belongs to Default Mode network
+% 0 --> node does not belongs to any of the 7 yeo network
+
+atlas_path = fullfile(working_dir,'atlases');
+atlas_brain_path = fullfile(atlas_path,[atlas_name,'.nii']);
+
+atlas_yeo_path = fullfile(atlas_path,'yeo_7_net.nii');
+idx = yeo_networks(atlas_brain_path,atlas_yeo_path);
+
+net_names = {'Non Yeo','Visual','Somato Motor','Dorsal Attention','Ventral Attention','Limbic Network','Fronto-Parietal','Default Mode','Whole Brain'};
+nets = 0:7;       % Choose yeo network, if net_id does not exist code will consider all the nodes (whole brain)
+
+col = [0 1 1
+    0.4940 0.1840 0.5560;
+    0 0.4470 0.4710;
+    0 1 0;
+    0 0 0;
+    0.9290 0.694 0.125;
+    1 0 1;
+    1 0 0];
+
+tic
+for i_net = 9:-1:1
+    %     close all
+    if i_net == 9
+        clear net_id
+    else
+        net_id = nets(i_net);
+    end
+
+    %% Load Rest data
+
+    data_1 = load(fullfile(matfile_path,['HCP_',atlas_name,'_run_1_encode_LR_sub_block',sub_block,'_reg_ts.mat']),'reg_ts','p_sub_name'); % load the run1 LR subjects
+%     sub_namerun1 = data_1.p_sub_name;                                              % run1 LR subject names
+    data_1 = data_1.reg_ts;                                                    % run1 LR average region time series
+
+
+    data_2 = load(fullfile(matfile_path,['HCP_',atlas_name,'_run_1_encode_RL_sub_block',sub_block,'_reg_ts.mat']),'reg_ts','p_sub_name'); % load the run2 LR subjects
+%     sub_namerun2 = data_2.p_sub_name;                                              % run2 LR subject names
+    data_2 = data_2.reg_ts;                                                    % run2 LR average region time series
+
+    
+    sub_info_rest = cell(10,1);                                                      % will contain selected subject name and its age
+
+
+    % FC_non_linear = 0;                         % Use non linear FC
+    % sym = true;                                % Use symettric non linear FC
+
+    if exist('net_id','var')                                                    % if net_id exists
+        net = idx == net_id;                                                    % Get the index of the ROIs corresponding to the Yeo network
+    else
+        net = 1:size(data_1,2);                                              % else use all the ROIs
+    end
+
+
+    %% Filter
+
+    fc1 = 0.01;                                                                 % Low pass cutoff
+    fc2 = 0.1;                                                                  % High pass cutoff
+    TR = 0.72;                                                                   % TR
+    fs = 1/TR;                                                                  % fs
+
+    [b,a] = butter(5,[fc1,fc2]/(fs/2),'bandpass');                              % butterworth filter of the 5th order
+
+    run1_fs = filter(b,a,data_1(:,net,1:2*configs.numSubj));                                   % filter the run1_lr data
+    run2_fs = filter(b,a,data_2(:,net,1:2*configs.numSubj));                                   % filter the run2_lr data
+
+    for win_i = length(Win_size):-1:1
+        disp(['Window ' num2str(win_i) ' out of ' num2str(length(Win_size))]  )
+        for s_i = length(Stride):-1:1
+            tic
+            disp(['Stride ' num2str(s_i) ' out of ' num2str(length(Stride))]  )
+            configs.Nparc = nnz(net); % Number of brain regions
+            configs.mask_ut = triu(true(configs.Nparc,configs.Nparc),1); % Upper triangular mask
+
+            configs.wjump = Stride(s_i); % Window step (in time points)
+
+            vec_rest1 = functional_connectivity(run1_fs,0,Win_size(win_i),Stride(s_i));
+            vec_rest2 = functional_connectivity(run2_fs,0,Win_size(win_i),Stride(s_i));
+
+            configs.k_frames = 1:size(vec_rest1,2);
+
+            %% Train test split
+            vec_rest1_train = vec_rest1(:,:,1:train_sub);
+%             vec_rest2_train = vec_rest2(:,:,1:train_sub);
+
+           
+            vec_rest1_test = vec_rest1(:,:,train_sub+1:end);
+            vec_rest2_test = vec_rest2(:,:,train_sub+1:end);
+            
+            for C_i = 1:length(Com_comp)
+                Component_remv = Com_comp(C_i);           % Number of Common components to be removed
+                if Com_comp(C_i)> size(vec_rest1_train,2)
+                    continue
+                end
+
+                %% Dynamic I-diff
+                configs.numSubj = size(vec_rest1_test,3);
+                dIdent = f_create_dIdent_tensor(permute(vec_rest1_test,[3,1,2]),permute(vec_rest2_test,[3,1,2])); % create dynamic identifiability matrix
+                [~,max_dI_idx] = max(dIdent);
+                clear dIdent
+                %% CobeIndiv_cell_run
+
+                COBE_CM_Component = my_cobec( vec_rest1_train,Component_remv ); % COBE algorithm
+
+                [~,Sub_spec_test_1] = cobe_transform(vec_rest1_test,COBE_CM_Component);                                    % the dictionary extracted from the training subjects.
+                [~,Sub_spec_test_2] = cobe_transform(vec_rest2_test,COBE_CM_Component);
+
+                s = size(vec_rest1_test,2);                                           % number of frames in dFC
+                p = size(vec_rest1_test,3);                                           % number of test subjects
+
+
+                %% Classification Rate Computation
+                dIdent_cobe = f_create_dIdent_tensor(permute(Sub_spec_test_1,[3,1,2]),permute(Sub_spec_test_2,[3,1,2])); % create dynamic identifiability matrix
+                [~,max_dI_idx_cobe] = max(dIdent_cobe);
+                clear dIdent_cobe
+                gt = repmat(1:p,s,1);   % Ground truth
+                gt = reshape(gt,[],1);   % Ground truth
+
+                [acco(win_i,s_i,C_i),acco_or(win_i,s_i,C_i)] = classification_rate_dfc(max_dI_idx_cobe',max_dI_idx',p,s);
+                save(fullfile(results_path,[atlas_name,'_para_test',sub_block,'_',char(net_names{i_net}),'.mat']),"acco",'acco_or')
+
+                disp('Acco before: ')
+                disp(acco_or(win_i,s_i,C_i))
+                disp('Acco After COBE: ')
+                acco(win_i,s_i,C_i)
+                toc
+            end
+        end
+    end
+end
+
+
+
+
+function [acco,acco_or] = classification_rate_dfc(idf_idx,idf_idx_orr,p,s)
+
+%% Input
+% sub_spec --> subject specific FC (train) --> n x p (n = FC upper triangular vector, p = number of training scans)
+% sub_spec_test --> subject specific FC (test) --> n x p (p = number of testing scans )
+% maph_n --> normalized original FC matrix used to train the dictionary --> n x p1
+% maph1_n --> normalized original FC matrix used for testing --> n x p2
+% s = sessions per subjects
+gt = repmat(1:p,s,1);   % Ground truth
+gt = reshape(gt,[],1);   % Ground truth
+
+confu_ = confusionmat(gt,gt(idf_idx));
+confu_orr = confusionmat(gt,gt(idf_idx_orr));
+
+acco = sum(diag(confu_))/sum(confu_(:));
+acco_or = sum(diag(confu_orr))/sum(confu_orr(:));
+end
+
+function [Comm_test,Sub_spec_test] = cobe_transform(vec,COBE_CM_Component)
+
+flat2d_run = reshape(vec,size(vec,1),size(vec,2)*size(vec,3));
+X_run_test = COBE_CM_Component'*flat2d_run;
+flat2d_Com_run_test = COBE_CM_Component*X_run_test;
+flat2d_Sub_spec_run_test = flat2d_run - COBE_CM_Component*X_run_test;
+
+Sub_spec_test = reshape(flat2d_Sub_spec_run_test,size(vec));
+Comm_test = reshape(flat2d_Com_run_test,size(vec));
+end

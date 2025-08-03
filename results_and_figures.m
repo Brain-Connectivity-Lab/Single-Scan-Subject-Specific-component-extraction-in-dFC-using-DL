@@ -137,116 +137,22 @@ figure;
 clear net_acco_test  net_acco_test_cobe
 for i_net = net_select_perm 
     load(fullfile(results_path,'nt_un',[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2_nt_un.mat']),'Idiff_max_test_perm','Idiff_max_test_cobe_perm','idiff_score_s')
-%     net_acco_test_s(:,i_net) = acco_or_test_perm_s(:)*100;
+
     net_acco_test_un(:,i_net) = Idiff_max_test_perm(:)*100;
 
     net_acco_test_cobe_un(:,i_net) = Idiff_max_test_cobe_perm(:)*100;
     
     load(fullfile(results_path,'MZ',[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2_MZ.mat']),'Idiff_max_test_perm','Idiff_max_test_cobe_perm','idiff_score_s')
-    net_acco_test_mz(:,i_net) = Idiff_max_test_perm(:)*100;
-
-    net_acco_test_cobe_mz(:,i_net) = Idiff_max_test_cobe_perm(:)*100;
-
-   
-end
-net_all = cat(3,net_acco_test_mz,net_acco_test_un,net_acco_test_cobe_mz,net_acco_test_cobe_un); % net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_cobe); %
-
-
-barplot_with_errorbars(net_all,net_names);ylim([0 120])
-legend({'Original dFC MZ','Original dFC UN','COBE-Subject-Specific dFC MZ','COBE-Subject-Specific dFC UN'}) %legend({'sFC','Original dFC','COBE-Subject-Specific dFC'})
-title([])
-ylabel('dI_{diff}')
-xlabel('Resting state Networks')
-set(gcf,"Position",[1,1,1850,500])
-set(gca,'FontSize',17)
-title(atlas_full_name)
-grid on
-%% acco with family data
- 
-figure;
-clear net_acco_test  net_acco_test_cobe
-for i_net = net_select_perm 
-    load(fullfile(results_path,'nt_un',[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2_nt_un.mat']),'acco_or_test_perm_s','acco_or_test_perm','acco_test_perm')
-%     net_acco_test_s(:,i_net) = acco_or_test_perm_s(:)*100;
-    net_acco_test_s_un(:,i_net) = acco_or_test_perm_s(:)*100;
-    net_acco_test_un(:,i_net) = acco_or_test_perm(:)*100;
-
-    net_acco_test_cobe_un(:,i_net) = acco_test_perm(:)*100;
-    
-    load(fullfile(results_path,'MZ',[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2_MZ.mat']),'acco_or_test_perm_s','acco_or_test_perm','acco_test_perm')
-    net_acco_test_s_mz(:,i_net) = acco_or_test_perm_s(:)*100;
-    net_acco_test_mz(:,i_net) = acco_or_test_perm(:)*100;
-
-    net_acco_test_cobe_mz(:,i_net) = acco_test_perm(:)*100;
-
-    [t_(i_net),p_(i_net)] = p5x2cv(reshape(net_acco_test_mz(:,i_net),2,5),reshape(net_acco_test_un(:,i_net),2,5));
-    [t_c(i_net),p_c(i_net)] = p5x2cv(reshape(net_acco_test_cobe_mz(:,i_net),2,5),reshape(net_acco_test_cobe_un(:,i_net),2,5));
-
-    [t_mz(i_net),p_mz(i_net)] = p5x2cv(reshape(net_acco_test_mz(:,i_net),2,5),reshape(net_acco_test_cobe_mz(:,i_net),2,5));
-    [t_un(i_net),p_un(i_net)] = p5x2cv(reshape(net_acco_test_un(:,i_net),2,5),reshape(net_acco_test_cobe_un(:,i_net),2,5));
-%     load(fullfile(results_path,[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2.mat']),'acco_or_test_perm_s','acco_or_test_perm','acco_test_perm')
-% %     net_acco_test_s(:,i_net) = acco_or_test_perm_s(:)*100;
-%     net_acco_test_s(:,i_net) = acco_or_test_perm_s(:)*100;
-%     net_acco_test(:,i_net) = acco_or_test_perm(:)*100;
-% 
-%     net_acco_test_cobe(:,i_net) = acco_test_perm(:)*100;
-% %     [~,p_acco(i_net)] = ttest2(net_acco_test_cobe(:,i_net),net_acco_test(:,i_net));
-end
-% net_all = cat(3,net_acco_test,net_acco_test_mz,net_acco_test_un,net_acco_test_cobe,net_acco_test_cobe_mz,net_acco_test_cobe_un); % net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_cobe); %
-% net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_s_mz,net_acco_test_mz,net_acco_test_s_un,net_acco_test_un,net_acco_test_cobe,net_acco_test_cobe_mz,net_acco_test_cobe_un); % net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_cobe);
-net_all = cat(3,net_acco_test_mz,net_acco_test_un,net_acco_test_cobe_mz,net_acco_test_cobe_un); % net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_cobe); %
-barplot_with_errorbars(net_all,net_names);ylim([0 120])
-legend({'Original dFC MZ','Original dFC un','COBE-Subject-Specific dFC MZ','COBE-Subject-Specific dFC un'}) %legend({'sFC','Original dFC','COBE-Subject-Specific dFC'})
-% legend({'Original sFC','Original dFC','Original sFC MZ','Original dFC MZ','Original sFC un','Original dFC un','COBE-Subject-Specific dFC','COBE-Subject-Specific dFC MZ','COBE-Subject-Specific dFC un'}) %legend({'sFC','Original dFC','COBE-Subject-Specific dFC'})
-
-title([])
-ylabel('Identification Rate')
-xlabel('Resting state Networks')
-set(gcf,"Position",[1,1,1850,500])
-set(gca,'FontSize',17)
-title(atlas_full_name)
-grid on
-%% idiff family data mz + dz
-
-results_path = ['E:\dy_identification_cobe\new_data_results\perm_check\' atlas_name '\res'];
-figure;
-clear net_acco_test  net_acco_test_cobe
-for i_net = net_select_perm 
-    load(fullfile(results_path,'nt_un',[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2_nt_un.mat']),'Idiff_max_test_perm','Idiff_max_test_cobe_perm','idiff_score_s')
-
-%     net_acco_test_s(:,i_net) = acco_or_test_perm_s(:)*100;
-    net_acco_test_s_un(:,i_net) = idiff_score_s(:)*100;
-    net_acco_test_un(:,i_net) = Idiff_max_test_perm(:)*100;
-
-    net_acco_test_cobe_un(:,i_net) = Idiff_max_test_cobe_perm(:)*100;
-    
-    load(fullfile(results_path,'MZ',[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2_MZ.mat']),'Idiff_max_test_perm','Idiff_max_test_cobe_perm','idiff_score_s')
-    net_acco_test_s_mz(:,i_net) = idiff_score_s(:)*100;
     net_acco_test_mz(:,i_net) = Idiff_max_test_perm(:)*100;
 
     net_acco_test_cobe_mz(:,i_net) = Idiff_max_test_cobe_perm(:)*100;
     
     load(fullfile(results_path,'DZ',[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2_DZ.mat']),'Idiff_max_test_perm','Idiff_max_test_cobe_perm','idiff_score_s')
-    net_acco_test_s_dz(:,i_net) = idiff_score_s(:)*100;
     net_acco_test_dz(:,i_net) = Idiff_max_test_perm(:)*100;
 
     net_acco_test_cobe_dz(:,i_net) = Idiff_max_test_cobe_perm(:)*100;
-    
-%     [t_(i_net),p_(i_net)] = p5x2cv(reshape(net_acco_test_mz(:,i_net),2,5),reshape(net_acco_test_un(:,i_net),2,5));
-%     [t_c(i_net),p_c(i_net)] = p5x2cv(reshape(net_acco_test_cobe_mz(:,i_net),2,5),reshape(net_acco_test_cobe_un(:,i_net),2,5));
-% 
-%     [t_mz(i_net),p_mz(i_net)] = p5x2cv(reshape(net_acco_test_mz(:,i_net),2,5),reshape(net_acco_test_cobe_mz(:,i_net),2,5));
-%     [t_un(i_net),p_un(i_net)] = p5x2cv(reshape(net_acco_test_un(:,i_net),2,5),reshape(net_acco_test_cobe_un(:,i_net),2,5));
-%     load(fullfile(results_path,[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2.mat']),'acco_or_test_perm_s','acco_or_test_perm','acco_test_perm')
-% %     net_acco_test_s(:,i_net) = acco_or_test_perm_s(:)*100;
-%     net_acco_test_s(:,i_net) = acco_or_test_perm_s(:)*100;
-%     net_acco_test(:,i_net) = acco_or_test_perm(:)*100;
-% 
-%     net_acco_test_cobe(:,i_net) = acco_test_perm(:)*100;
-% %     [~,p_acco(i_net)] = ttest2(net_acco_test_cobe(:,i_net),net_acco_test(:,i_net));
+
 end
-% net_all = cat(3,net_acco_test,net_acco_test_mz,net_acco_test_un,net_acco_test_cobe,net_acco_test_cobe_mz,net_acco_test_cobe_un); % net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_cobe); %
-% net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_s_mz,net_acco_test_mz,net_acco_test_s_un,net_acco_test_un,net_acco_test_cobe,net_acco_test_cobe_mz,net_acco_test_cobe_un); % net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_cobe);
 net_all = cat(3,net_acco_test_mz,net_acco_test_dz,net_acco_test_un,net_acco_test_cobe_mz,net_acco_test_cobe_dz,net_acco_test_cobe_un); % net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_cobe); %
 barplot_with_errorbars(net_all,net_names);ylim([0 120])
 legend({'Original dFC MZ','Original dFC DZ','Original dFC un','COBE-Subject-Specific dFC MZ','COBE-Subject-Specific dFC DZ','COBE-Subject-Specific dFC un'}) %legend({'sFC','Original dFC','COBE-Subject-Specific dFC'})
@@ -260,29 +166,23 @@ set(gca,'FontSize',17)
 title(atlas_full_name)
 grid on
 
-%% aCCO WITH dz AND mz 
 %% acco with family data
 %  acco
-results_path = ['E:\dy_identification_cobe\new_data_results\perm_check\' atlas_name '\res'];
 figure;
 clear net_acco_test  net_acco_test_cobe
 for i_net = net_select_perm 
     load(fullfile(results_path,'nt_un',[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2_nt_un.mat']),'acco_or_test_perm_s','acco_or_test_perm','acco_test_perm')
 
-%     net_acco_test_s(:,i_net) = acco_or_test_perm_s(:)*100;
-    net_acco_test_s_un(:,i_net) = acco_or_test_perm_s(:)*100;
     net_acco_test_un(:,i_net) = acco_or_test_perm(:)*100;
 
     net_acco_test_cobe_un(:,i_net) = acco_test_perm(:)*100;
     
     load(fullfile(results_path,'MZ',[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2_MZ.mat']),'acco_or_test_perm_s','acco_or_test_perm','acco_test_perm')
-    net_acco_test_s_mz(:,i_net) = acco_or_test_perm_s(:)*100;
     net_acco_test_mz(:,i_net) = acco_or_test_perm(:)*100;
 
     net_acco_test_cobe_mz(:,i_net) = acco_test_perm(:)*100;
     
     load(fullfile(results_path,'DZ',[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2_DZ.mat']),'acco_or_test_perm_s','acco_or_test_perm','acco_test_perm')
-    net_acco_test_s_dz(:,i_net) = acco_or_test_perm_s(:)*100;
     net_acco_test_dz(:,i_net) = acco_or_test_perm(:)*100;
 
     net_acco_test_cobe_dz(:,i_net) = acco_test_perm(:)*100;
@@ -293,20 +193,11 @@ for i_net = net_select_perm
 
     [t_mz_c(i_net),p_mz_c(i_net)] = p5x2cv(reshape(net_acco_test_mz(:,i_net),2,5),reshape(net_acco_test_cobe_mz(:,i_net),2,5));
     [t_un_c(i_net),p_un_c(i_net)] = p5x2cv(reshape(net_acco_test_un(:,i_net),2,5),reshape(net_acco_test_cobe_un(:,i_net),2,5));
-%     load(fullfile(results_path,[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2.mat']),'acco_or_test_perm_s','acco_or_test_perm','acco_test_perm')
-% %     net_acco_test_s(:,i_net) = acco_or_test_perm_s(:)*100;
-%     net_acco_test_s(:,i_net) = acco_or_test_perm_s(:)*100;
-%     net_acco_test(:,i_net) = acco_or_test_perm(:)*100;
-% 
-%     net_acco_test_cobe(:,i_net) = acco_test_perm(:)*100;
-% %     [~,p_acco(i_net)] = ttest2(net_acco_test_cobe(:,i_net),net_acco_test(:,i_net));
+
 end
-% net_all = cat(3,net_acco_test,net_acco_test_mz,net_acco_test_un,net_acco_test_cobe,net_acco_test_cobe_mz,net_acco_test_cobe_un); % net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_cobe); %
-% net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_s_mz,net_acco_test_mz,net_acco_test_s_un,net_acco_test_un,net_acco_test_cobe,net_acco_test_cobe_mz,net_acco_test_cobe_un); % net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_cobe);
 net_all = cat(3,net_acco_test_mz,net_acco_test_dz,net_acco_test_un,net_acco_test_cobe_mz,net_acco_test_cobe_dz,net_acco_test_cobe_un); % net_all = cat(3,net_acco_test_s,net_acco_test,net_acco_test_cobe); %
 barplot_with_errorbars(net_all,net_names);ylim([0 120])
 legend({'Original dFC MZ','Original dFC DZ','Original dFC un','COBE-Subject-Specific dFC MZ','COBE-Subject-Specific dFC DZ','COBE-Subject-Specific dFC un'}) %legend({'sFC','Original dFC','COBE-Subject-Specific dFC'})
-% legend({'Original sFC','Original dFC','Original sFC MZ','Original dFC MZ','Original sFC un','Original dFC un','COBE-Subject-Specific dFC','COBE-Subject-Specific dFC MZ','COBE-Subject-Specific dFC un'}) %legend({'sFC','Original dFC','COBE-Subject-Specific dFC'})
 
 title([])
 ylabel('Identification Rate')
@@ -317,13 +208,12 @@ title(atlas_full_name)
 grid on
 
 %% COBE Dictionary (more than 1 basis)
-atlas_name = 'a116';
-results_path = ['E:\dy_identification_cobe\new_data_results\perm_check\' atlas_name];
+results_path = fullfile(working_dir,'5x2cv',atlas_name);
 net_names = {'Non Yeo','Visual','Somato Motor','Dorsal Attention','Ventral Attention','Limbic Network','Fronto-Parietal','Default Mode','Whole Brain'}; % names of the networks
 
 i_net = 9;
-atlas_path = ['D:\Atlases\2mm_new\' atlas_name '.nii'];
-atlas_yeo = 'D:\Atlases\2mm_new\yeo_7_net.nii';
+atlas_path = fullfile(working_dir,'atlases',[atlas_name,'.nii']);
+atlas_yeo = fullfile(working_dir,'atlases','yeo_7_net.nii');
 idx = yeo_networks(atlas_path,atlas_yeo);
 [sort_idx_val,sort_idx] = sort(idx);
 load(fullfile(results_path,[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2.mat'])) %[char(net_names(i_net)),'_max_acco1_' atlas_name '_test5x2.mat']
@@ -357,7 +247,7 @@ net_names = {'Non Yeo','Visual','Somato Motor','Dorsal Attention','Ventral Atten
 set(gca,'xtick',1:8,'xticklabel',net_names)
 set(gca,'ytick',1:8,'yticklabel',net_names)
 set(gca,'FontSize',15)
-% clim([-10 1.5]*10^(-3))
+clim([-0.01 0])
 colorbar
 % colormap("jet")
 

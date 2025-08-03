@@ -68,7 +68,7 @@ if size(size(data)) <= 2
     if exist("names","var")
         set(gca,'xtick',1:length(mean_),'xticklabel',names)
     end
-    errorbar(x',mean_,std_,std_, 'LineWidth',3, 'MarkerSize',5,LineStyle = 'none',Color=[1,0,0],CapSize=15);
+    errorbar(x',mean_,std_,std_, 'LineWidth',3, 'MarkerSize',5,LineStyle = 'none',Color=[0,0,0],CapSize=15);
 else
     b = bar(mean_, 'grouped');
     hold on
@@ -80,7 +80,7 @@ else
         x(i,:) = b(i).XEndPoints;
     end
     % Plot the errorbars
-    errorbar(x',mean_,std_,std_,'k', 'LineWidth',3, 'MarkerSize',5,LineStyle = 'none',Color=[1,0,0],CapSize=15);
+    errorbar(x',mean_,std_,std_,'k', 'LineWidth',3, 'MarkerSize',5,LineStyle = 'none',Color=[0,0,0],CapSize=15);
     hold off
     if exist("names","var")
         set(gca,'xtick',1:length(mean_),'xticklabel',names)
